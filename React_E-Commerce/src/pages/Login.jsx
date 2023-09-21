@@ -51,73 +51,80 @@ import axios from "axios";
 import { Link,useNavigate} from "react-router-dom"; // Make sure this import is present
 // import { useUser } from './UserContext';
 import { Navbar } from "../components";
-import './login_register.css';
-function Login() {
-  const[email,setemail]=useState('');
-  const[password,setpassword]=useState('');
-  // const { setUser } = useUser(); 
+import './login_register.css';function Register() {
+  //   const [username, setUsername] = useState('');
+  //   const [password, setPassword] = useState('');
+  //   const [email, setEmail] = useState('');
+  
+  const [userDetails,setUserDetails] = useState({
+      email : '',
+      password : ''
+  })
+  
+  const inputHandler = (e) =>{
+     
+  setUserDetails({...userDetails, [e.target.id] : e.target.value})
+  
+  }
+  
+  
+  // const HandleSignUp = async() =>{
+  //     const response=await axios.post("http://localhost:3000/registration", userDetails);
+  //     console.log(response);
+  // }
   const navigate=useNavigate();
-  const handlelogin=async(e)=>
-  {
-    const userlogindetails = {
-      email,
-      password,
-    };
-    e.preventDefault();
-      try 
+  const handleLogin = async() => {
+  try {
+      const response=await axios.post("http://localhost:3000/logindata", userDetails);
+      console.log(response);
+      if(response.status === 201)
       {
-        const response = await axios.post("http://localhost:3000/api/logindata", {userlogindetails});
-        console.log(response.data);
-        if (response.status === 200) 
-        {
-          // const user = response.data.user;
-          // setUser(user);
-          navigate('/');
-        } 
-        else if (response.status === 401) 
-        {
-          alert("Invalid Authentication Credentials");
-        } 
-        else 
-        {
-          alert("Login Error");
-        }
+        navigate("/");
+        alert("Login Successful");
       }
+      else
+      {
+        alert("Login error");
+      }
+      } 
       catch(error) 
       {
-        alert("Invalid Credentials");
-      }  
-    }
-    return (
-    <>
-    <Navbar/>
-    <div className="main-div">
-      <h4 className="header">LogIn page</h4>
-        <form>
-            <table className="signup-table">
-              <tr>
+        alert("Please enter valid details");
+      }
+    };
+  return (
+   <>
+   <Navbar/>
+   <div className="main-div">
+   <h4 className="header">Login</h4>
+   <form>
+       <table className="signup-table">
+           <tbody>
+               <tr>
                   <td>Email id: </td>
                   <td>
-                  <input type="email"  placeholder="email" value={email} onChange={(e)=>setemail(e.target.value)} required/>
+                    <input type="email" id="email" placeholder="Email"  onChange={inputHandler} required/>
                   </td>
-                  </tr>
-                  <tr>
-                    <td>Password: </td>
-                    <td>
-                    <input type="password" id="password" placeholder="Password" value={password} onChange={(e)=>setpassword(e.target.value)} required/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colSpan="2">
-                    <button onClick={handlelogin}>Submit</button>
-                    </td>
-                  </tr>
-                </table>
-            </form>
-            <p>Not a registered user?&nbsp;
-            <Link to="/register">Register</Link></p>
-      </div>
-    </>
+               </tr>
+               <tr>
+                  <td>Password: </td>
+                  <td>
+                  <input type="password" id="password" placeholder="Password"  onChange={inputHandler} required/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colSpan="2">
+                    <button type="button" onClick={handleLogin}>Log In</button>
+                  </td>
+               </tr>
+           </tbody>
+       </table>
+   </form>
+   <p>Not registered?&nbsp;
+   <Link to="/register">Login here</Link></p>
+  </div>
+  </>
   );
-}
-export default Login;
+  }
+  export default Register;
+  

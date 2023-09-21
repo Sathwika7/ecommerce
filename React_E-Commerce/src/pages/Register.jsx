@@ -170,50 +170,46 @@ setUserDetails({...userDetails, [e.target.id] : e.target.value})
 }
 
 
-const HandleSignUp = async() =>{
-    const response=await axios.post("http://localhost:3000/registration", userDetails);
-    console.log(response);
-}
-  const navigate=useNavigate();
-//   const handleSignup = async() => {
-    
-//     // const userdetails= {
-//     //   username,
-//     //   password,
-//     //   email
-//     // };
-//     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-//     /*Password should contain minimum 8 characters and should contain one uppercase, one lowercase and one special character*/
-//     const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[@#$%^&+=!])(?=.*\d).{8,}$/;
-//     if(emailRegex.test(userdetails.email) && passwordRegex.test(userDetails.password))
-//     {
-//       try {
-//         const response=await axios.post("http://localhost:3000/registration", userdetails); 
-//         if(response.status === 201)
-//         {
-//           alert("Successfully registered");
-//         }
-//         else
-//         {
-//           alert("Signup error");
-//         }
-//         // alert("Registration Successful");
-//         navigate("/");
-//       } 
-//       catch(error) 
-//       {
-//         alert("Please enter valid details");
-//       }
-//     }
-//     else if(emailRegex.test(email) === false)
-//     {
-//       alert("Please enter a valid email");
-//     }
-//     else
-//     {
-//       alert("Password should contain minimum 8 characters and should contain one uppercase letter, one lowercase letter and one special character");
-//     }
-//   };
+// const HandleSignUp = async() =>{
+//     const response=await axios.post("http://localhost:3000/registration", userDetails);
+//     console.log(response);
+// }
+const navigate=useNavigate();
+const handleSignUp = async() => {
+
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    /*Password should contain minimum 8 characters and should contain one uppercase, one lowercase and one special character*/
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[@#$%^&+=!])(?=.*\d).{8,}$/;
+    if(emailRegex.test(userDetails.email) && passwordRegex.test(userDetails.password))
+    {
+      try {
+        const response=await axios.post("http://localhost:3000/registration", userDetails);
+        console.log(response);
+        if(response.status === 201)
+        {
+          alert("Successfully registered");
+        }
+        else
+        {
+          alert("Signup error");
+        }
+        // alert("Registration Successful");
+        navigate("/login");
+      } 
+      catch(error) 
+      {
+        alert("Please enter valid details");
+      }
+    }
+    else if(emailRegex.test(userDetails.email) === false)
+    {
+      alert("Please enter a valid email");
+    }
+    else
+    {
+      alert("Password should contain minimum 8 characters and should contain one uppercase letter, one lowercase letter and one special character");
+    }
+  };
 return (
  <>
  <Navbar/>
@@ -242,7 +238,7 @@ return (
              </tr>
              <tr>
                 <td colSpan="2">
-                  <button type="button" onClick={HandleSignUp}>Signup</button>
+                  <button type="button" onClick={handleSignUp}>Signup</button>
                 </td>
              </tr>
          </tbody>

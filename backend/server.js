@@ -29,8 +29,6 @@ app.get("/", (req,res) =>{
 app.post("/registration", (req, res) => {
    console.log("hello");
    const {email, password,username}= req.body;
-
-   
    // Insert user details into the database
    db.query(
      "INSERT INTO userdata (username, password, email) VALUES (?, ?, ?)",
@@ -46,29 +44,29 @@ app.post("/registration", (req, res) => {
    );
  });
 
-//  app.post("/api/logindata", (req, res) => {
-//   const { userlogindetails } = req.body;
-//   // Check if the username and password match a record in the database
-//   db.query(
-//     "SELECT * FROM userdata WHERE email = ? AND password = ?",
-//     [userlogindetails.email, userlogindetails.password],
-//     (err, results) => {
-//       if (err) {
-//         console.error("Error checking user details:", err);
-//         res.status(500).json({ message: "Error checking user details" });
-//       } else {
-//         if (results.length > 0) { 
-//           const user = results[0]; // Assuming the first result contains the user data
-//           console.log('User data from DB:', user);
-//           // Send the user data in the response
-//           res.status(200).json({ user });
-//         } else {
-//           res.status(401).json({ message: "Invalid credentials" });
-//         }
-//       }
-//     }
-//   );
-// });
+ app.post("/logindata", (req, res) => {
+   const {email, password} = req.body;
+  // Check if the username and password match a record in the database
+  db.query(
+    "SELECT * FROM userdata WHERE email = ? AND password = ?",
+    [email, password],
+    (err, results) => {
+      if (err) {
+        console.error("Error checking user details:", err);
+        res.status(500).json({ message: "Error checking user details" });
+      } else {
+        if (results.length > 0) { 
+          const user = results[0]; // Assuming the first result contains the user data
+          console.log('User data from DB:', user);
+          // Send the user data in the response
+          res.status(200).json({ user });
+        } else {
+          res.status(401).json({ message: "Invalid credentials" });
+        }
+      }
+    }
+  );
+});
 
 app.get('/api/productsinfo', (req, res) => {
     const query = 'SELECT * FROM products'; // Replace with your actual query
