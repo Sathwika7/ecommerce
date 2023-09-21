@@ -67,11 +67,6 @@ import './login_register.css';function Register() {
   
   }
   
-  
-  // const HandleSignUp = async() =>{
-  //     const response=await axios.post("http://localhost:3000/registration", userDetails);
-  //     console.log(response);
-  // }
   const navigate=useNavigate();
   const handleLogin = async() => {
   try {
