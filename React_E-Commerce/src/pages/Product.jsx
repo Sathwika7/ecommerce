@@ -111,74 +111,74 @@ const Product = () => {
     );
   };
 
-  const Loading2 = () => {
-    return (
-      <div className="my-4 py-4">
-        <div className="d-flex">
-          <div className="mx-4">
-            <Skeleton height={400} width={250} />
-          </div>
-          <div className="mx-4">
-            <Skeleton height={400} width={250} />
-          </div>
-          <div className="mx-4">
-            <Skeleton height={400} width={250} />
-          </div>
-          <div className="mx-4">
-            <Skeleton height={400} width={250} />
-          </div>
-        </div>
-      </div>
-    );
-  };
+  // const Loading2 = () => {
+  //   return (
+  //     <div className="my-4 py-4">
+  //       <div className="d-flex">
+  //         <div className="mx-4">
+  //           <Skeleton height={400} width={250} />
+  //         </div>
+  //         <div className="mx-4">
+  //           <Skeleton height={400} width={250} />
+  //         </div>
+  //         <div className="mx-4">
+  //           <Skeleton height={400} width={250} />
+  //         </div>
+  //         <div className="mx-4">
+  //           <Skeleton height={400} width={250} />
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // };
 
-  const ShowSimilarProduct = () => {
-    return (
-      <div className="py-4 my-4">
-        <div className="d-flex">
-          {similarProducts.map((item) => {
-            return (
-              <div key={item.id} className="card mx-4 text-center">
-                <img
-                  className="card-img-top p-3"
-                  src={item.image}
-                  alt="Card"
-                  height={300}
-                  width={300}
-                />
-                <div className="card-body">
-                  <h5 className="card-title">
-                    {item.title.substring(0, 15)}...
-                  </h5>
-                </div>
-                <div className="card-body">
-                  <Link
-                    to={"/product/" + item.id}
-                    className="btn btn-dark m-1"
-                  >
-                    Buy Now
-                  </Link>
-                  <button
-                    className="btn btn-dark m-1"
-                    onClick={() => addProduct(item)}
-                  >
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
+  // const ShowSimilarProduct = () => {
+  //   return (
+  //     <div className="py-4 my-4">
+  //       <div className="d-flex">
+  //         {similarProducts.map((item) => {
+  //           return (
+  //             <div key={item.id} className="card mx-4 text-center">
+  //               <img
+  //                 className="card-img-top p-3"
+  //                 src={item.image}
+  //                 alt="Card"
+  //                 height={300}
+  //                 width={300}
+  //               />
+  //               <div className="card-body">
+  //                 <h5 className="card-title">
+  //                   {item.title.substring(0, 15)}...
+  //                 </h5>
+  //               </div>
+  //               <div className="card-body">
+  //                 <Link
+  //                   to={"/product/" + item.id}
+  //                   className="btn btn-dark m-1"
+  //                 >
+  //                   Buy Now
+  //                 </Link>
+  //                 <button
+  //                   className="btn btn-dark m-1"
+  //                   onClick={() => addProduct(item)}
+  //                 >
+  //                   Add to Cart
+  //                 </button>
+  //               </div>
+  //             </div>
+  //           );
+  //         })}
+  //       </div>
+  //     </div>
+  //   );
+  // };
 
   return (
     <>
       <Navbar />
       <div className="container">
         <div className="row">{loading ? <Loading /> : <ShowProduct />}</div>
-        <div className="row my-5 py-5">
+        {/* <div className="row my-5 py-5">
           <div className="d-none d-md-block">
             <h2 className="">You may also Like</h2>
             <Marquee
@@ -189,7 +189,7 @@ const Product = () => {
               {loading2 ? <Loading2 /> : <ShowSimilarProduct />}
             </Marquee>
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );

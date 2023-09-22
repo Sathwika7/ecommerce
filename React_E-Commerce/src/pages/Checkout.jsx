@@ -11,7 +11,7 @@ const Checkout = () => {
         <div className="row">
           <div className="col-md-12 py-5 bg-light text-center">
             <h4 className="p-3 display-5">No item in Cart</h4>
-            <Link to="/" className="btn btn-outline-dark mx-4">
+            <Link to="/product" className="btn btn-outline-dark mx-4">
               <i className="fa fa-arrow-left"></i> Continue Shopping
             </Link>
           </div>
@@ -168,7 +168,8 @@ const Checkout = () => {
                         <br />
                         <select className="form-select" id="state" required>
                           <option value="">Choose...</option>
-                          <option>Punjab</option>
+                          <option>Andhra Pradesh</option>
+                          <option>Chennai</option>
                         </select>
                         <div className="invalid-feedback">
                           Please provide a valid state.
@@ -268,7 +269,7 @@ const Checkout = () => {
                     <hr className="my-4" />
 
                     <button
-                      className="w-100 btn btn-primary "
+                      className="w-30 btn btn-primary "
                       type="submit" disabled
                     >
                       Continue to checkout

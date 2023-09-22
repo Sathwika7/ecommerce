@@ -14,7 +14,7 @@ const Cart = () => {
         <div className="row">
           <div className="col-md-12 py-5 bg-light text-center">
             <h4 className="p-3 display-5">Your Cart is Empty</h4>
-            <Link to="/" className="btn  btn-outline-dark mx-4">
+            <Link to="/product" className="btn  btn-outline-dark mx-4">
               <i className="fa fa-arrow-left"></i> Continue Shopping
             </Link>
           </div>
@@ -80,30 +80,7 @@ const Cart = () => {
                             </div>
 
                             <div className="col-lg-4 col-md-6">
-                              <div
-                                className="d-flex mb-4"
-                                style={{ maxWidth: "300px" }}
-                              >
-                                <button
-                                  className="btn px-3"
-                                  onClick={() => {
-                                    removeItem(item);
-                                  }}
-                                >
-                                  <i className="fas fa-minus"></i>
-                                </button>
-
-                                <p className="mx-5">{item.qty}</p>
-
-                                <button
-                                  className="btn px-3"
-                                  onClick={() => {
-                                    addItem(item);
-                                  }}
-                                >
-                                  <i className="fas fa-plus"></i>
-                                </button>
-                              </div>
+                             
 
                               <p className="text-start text-md-center">
                                 <strong>
@@ -112,6 +89,31 @@ const Cart = () => {
                                 </strong>
                               </p>
                             </div>
+                            <div
+                        
+                                style={{ maxWidth: "300px", display:"flex", flexDirection: "row" }}
+                              >
+                                <button
+                                  style={{backgroundColor: "white", color:"black", border:"none"}}
+                                  
+                                  onClick={() => {
+                                    removeItem(item);
+                                  }}
+                                >
+                                  <i className="fas fa-minus"></i>
+                                </button>
+
+                                <p className="mx-3">{item.qty}</p>
+
+                                <button 
+                                  style={{marginLeft: "-2%", backgroundColor: "white", color:"black", border:"none"}}
+                                  onClick={() => {
+                                    addItem(item);
+                                  }}
+                                >
+                                  <i className="fas fa-plus"></i>
+                                </button>
+                              </div>
                           </div>
 
                           <hr className="my-4" />
