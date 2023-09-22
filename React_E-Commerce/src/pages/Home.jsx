@@ -1,11 +1,14 @@
-import { Navbar, Main, Product } from "../components";
+import React from 'react';
+import { Navbar, Main, Product } from '../components';
 function Home() {
   return (
     <>
       <Navbar />
-      <Main />
-      <Product />
+      <div>
+        <Main />
+        <Product />
+      </div>
     </>
-  )
+  );
 }
 export default Home;

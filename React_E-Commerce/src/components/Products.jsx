@@ -16,6 +16,7 @@ const Products = () => {
   const dispatch = useDispatch();
 
   const addProduct = (product) => {
+    // console.log("product page", product);
     dispatch(addCart(product));
   };
 

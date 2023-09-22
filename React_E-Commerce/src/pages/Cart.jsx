@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Navbar } from "../components";
 import { useSelector, useDispatch } from "react-redux";
 import { addCart, delCart } from "../redux/action";
 import { Link } from "react-router-dom";
-
+import { UserContext } from './UserContextProvider';
+import axios from "axios";
 const Cart = () => {
   const state = useSelector((state) => state.handleCart);
   const dispatch = useDispatch();
-
+  const { user } = useContext(UserContext);
+  console.log(user.email);
   const EmptyCart = () => {
     return (
       <div className="container">
@@ -24,8 +26,31 @@ const Cart = () => {
   };
 
   const addItem = (product) => {
+    console.log("hello");
+    console.log(user);
+    console.log(product);
+    // Dispatch the action to add the product to the Redux store
     dispatch(addCart(product));
+    // Create an object containing user and product details
+    const cartItem = {
+      user: user.email, 
+      product: product.id,
+    };
+    console.log("user",user,"product",product);
+    axios.post("/addToCart", cartItem)
+    .then((response) => {
+      console.log("Item added to the cart:", response.data);
+    })
+    .catch((error) => {
+      console.error("Error adding item to cart:", error);
+    });
   };
+
+  // const addItem = (product) => {
+  //   dispatch(addCart(product));
+  //   console.log()
+
+  // };
   const removeItem = (product) => {
     dispatch(delCart(product));
   };

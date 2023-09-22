@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState , useContext } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Navbar } from "../components";
+import { UserContext } from "./UserContextProvider";
 import './login_register.css';
-
 function Login() {
+  const { setUser } = useContext(UserContext); 
   const [userDetails, setUserDetails] = useState({
     email: '',
     password: ''
@@ -22,6 +23,8 @@ function Login() {
       const response = await axios.post("http://localhost:3000/logindata", userDetails);
       console.log(response);
       if (response.status === 200) {
+        const user = response.data.user;
+        setUser(user);
         navigate("/home");
         alert("Login Successful");
       } else {

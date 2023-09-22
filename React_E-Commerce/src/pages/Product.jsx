@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Skeleton from "react-loading-skeleton";
 import { Link, useParams } from "react-router-dom";
 import Marquee from "react-fast-marquee";
@@ -6,15 +6,16 @@ import { useDispatch } from "react-redux";
 import { addCart } from "../redux/action";
 import { Navbar } from "../components";
 import axios from 'axios';
+// import { UserContext } from './UserContextProvider';
 const Product = () => {
   const { id } = useParams();
   const [product, setProduct] = useState({});
   const [similarProducts, setSimilarProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loading2, setLoading2] = useState(true);
-
+  // const { user } = useContext(UserContext);
   const dispatch = useDispatch();
-
+  // console.log(user.email);
   const addProduct = (product) => {
     dispatch(addCart(product));
   };
