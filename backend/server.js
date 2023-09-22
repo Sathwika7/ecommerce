@@ -70,6 +70,36 @@ app.post("/registration", (req, res) => {
   );
 });
 
+app.post("http://localhost:3000/addToCart", (req, res) => {
+  const { userId, productId, quantity } = req.body;
+
+  // Insert the cart item into the database
+  const sql = "INSERT INTO user_cart (user_id, product_id, quantity) VALUES (?, ?, ?)";
+  db.query(sql, [userId, productId, quantity], (err, result) => {
+    if (err) {
+      console.error("Error adding item to cart:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    } else {
+      res.status(200).json({ message: "Item added to cart" });
+    }
+  });
+});
+
+app.delete("/api/deleteFromCart", (req, res) => {
+  const { userId, productId } = req.body;
+
+  // Delete the cart item from the database
+  const sql = "DELETE FROM user_cart WHERE user_id = ? AND product_id = ?";
+  db.query(sql, [userId, productId], (err, result) => {
+    if (err) {
+      console.error("Error deleting item from cart:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    } else {
+      res.status(200).json({ message: "Item deleted from cart" });
+    }
+  });
+});
+
 app.get('/api/productsinfo', (req, res) => {
     const query = 'SELECT * FROM products'; // Replace with your actual query
   
@@ -83,8 +113,6 @@ app.get('/api/productsinfo', (req, res) => {
       }
     });
   });
-
-  
 
 app.get('/api/products/:id', (req, res) => {
     const productId = req.params.id; // Get the product ID from the URL parameter
@@ -120,6 +148,7 @@ app.get('/api/products/similar/:category', (req, res) => {
        }
     });
 });
+
 
 
 // Start the server
