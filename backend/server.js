@@ -45,7 +45,8 @@ app.post("/registration", (req, res) => {
  });
 
  app.post("/logindata", (req, res) => {
-   const {email, password} = req.body;
+  const {email, password} = req.body;
+  console.log("server side",email,password);
   // Check if the username and password match a record in the database
   db.query(
     "SELECT * FROM userdata WHERE email = ? AND password = ?",
@@ -55,6 +56,7 @@ app.post("/registration", (req, res) => {
         console.error("Error checking user details:", err);
         res.status(500).json({ message: "Error checking user details" });
       } else {
+        console.log(email,password);
         if (results.length > 0) { 
           const user = results[0]; // Assuming the first result contains the user data
           console.log('User data from DB:', user);
