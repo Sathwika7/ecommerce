@@ -166,25 +166,8 @@ app.post("/deleteFromCart", (req, res) => {
   });
 });
 
-
-// app.delete("/deleteFromCart", (req, res) => {
-//   const { email, productId } = req.body;
-
-//   // Delete the cart item from the database
-//   const sql = "DELETE FROM user_cart WHERE user_id = ? AND product_id = ?";
-//   db.query(sql, [userId, productId], (err, result) => {
-//     if (err) {
-//       console.error("Error deleting item from cart:", err);
-//       res.status(500).json({ error: "Internal Server Error" });
-//     } else {
-//       res.status(200).json({ message: "Item deleted from cart" });
-//     }
-//   });
-// });
-
 app.get('/api/productsinfo', (req, res) => {
     const query = 'SELECT * FROM products'; // Replace with your actual query
-  
     // Execute the query
     db.query(query, (err, results) => {
       if (err) {
@@ -215,25 +198,55 @@ app.get('/api/products/:id', (req, res) => {
     });
  });
  
-app.get('/api/products/similar/:category', (req, res) => {
-    const category = req.params.category; // Get the category from the URL parameter
-    const query = `SELECT * FROM products WHERE category = ? AND id <> ? LIMIT 4`; // Replace with your actual table name
+// app.get('/api/products/similar/:category', (req, res) => {
+//     const category = req.params.category; // Get the category from the URL parameter
+//     const query = `SELECT * FROM products WHERE category = ? AND id <> ? LIMIT 4`; // Replace with your actual table name
  
-    // Execute the query with the category and exclude the current product (by ID)
-    db.query(query, [category, productId], (err, results) => {
-       if (err) {
-          console.error('Error querying the database:', err);
-          res.status(500).json({ error: 'Internal Server Error' });
-       } else {
-          // Return similar products
-          res.json(results);
-       }
-    });
+//     // Execute the query with the category and exclude the current product (by ID)
+//     db.query(query, [category, productId], (err, results) => {
+//        if (err) {
+//           console.error('Error querying the database:', err);
+//           res.status(500).json({ error: 'Internal Server Error' });
+//        } else {
+//           // Return similar products
+//           res.json(results);
+//        }
+//     });
+// });
+
+app.get("/cart", (req, res) => {
+  console.log("Hello cart!");
+  const email = req.query.email; // Use req.query to get query parameters
+  const query = `
+    SELECT
+      p.title,
+      p.image,
+      p.price,
+      u.productid,
+      u.quantity
+    FROM
+      products AS p
+    INNER JOIN
+      usercart AS u
+    ON
+      p.id = u.productid
+    WHERE
+      u.email = ?`;
+
+  // Execute the query
+  db.query(query, [email], (err, results) => {
+    if (err) {
+      console.error("Error querying the database:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    } else {
+      // Return cart details as JSON response
+      res.json(results);
+      console.log(results);
+    }
+  });
 });
 
 
-
-// Start the server
 app.listen(port, () => {
    console.log(`Server is running on port ${port}`);
 });

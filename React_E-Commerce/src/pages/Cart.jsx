@@ -1,14 +1,17 @@
-import React, { useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { Navbar } from "../components";
 import { useSelector, useDispatch } from "react-redux";
 import { addCart, delCart } from "../redux/action";
 import { Link } from "react-router-dom";
 import { UserContext } from './UserContextProvider';
 import axios from "axios";
+
 const Cart = () => {
   const state = useSelector((state) => state.handleCart);
+  const [cartDetails, setCartDetails] = useState([]);
   const dispatch = useDispatch();
   const { user } = useContext(UserContext);
+
   const EmptyCart = () => {
     return (
       <div className="container">
@@ -24,36 +27,57 @@ const Cart = () => {
     );
   };
 
-  const addItem = async(product) => {
+  const fetchCartDetails = async () => {
+    try {
+      console.log("Fetching cart details for email:", user.email);
+      const response = await axios.get("http://localhost:3000/cart", {
+        params: {
+          email: user.email,
+        },
+      });
+      console.log("Received cart details response:", response.data);
+      setCartDetails(response.data);
+    } catch (error) {
+      console.error("Error fetching cart details:", error);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch cart details when the component mounts or when the user changes
+    if (user && user.email) {
+      fetchCartDetails();
+    }
+  }, [user]);
+
+  const addItem = async (product) => {
     console.log(user);
     console.log(product);
     // Dispatch the action to add the product to the Redux store
-    dispatch(addCart(product));
-    console.log("user",user,"product",product);
+    // dispatch(addCart(product));
+    console.log("user", user, "product", product);
     try {
       const response = await axios.post("http://localhost:3000/addToCart/", {
         email: user.email,
-        productid: product.id,
-      }); // Use axios.post to send data in the request body
+        productid: product.productid,
+      });
       if (!response) {
         throw new Error("Network response was not ok");
-      } 
-      else {
+      } else {
         console.log("Item added to the cart");
       }
     } catch (error) {
       console.error("Error adding item to cart:", error);
     }
+    fetchCartDetails();
   };
 
-
-  const removeItem = async(product) => {
-    dispatch(delCart(product));
+  const removeItem = async (product) => {
+    // dispatch(delCart(product));
     try {
       const response = await axios.post("http://localhost:3000/deleteFromCart/", {
         email: user.email,
-        productid: product.id,
-      }); // Use axios.post to send data in the request body
+        productid: product.productid,
+      });
       if (!response) {
         throw new Error("Network response was not ok");
       } else {
@@ -62,139 +86,148 @@ const Cart = () => {
     } catch (error) {
       console.error("Error deleting item from the cart:", error);
     }
+    fetchCartDetails();
   };
 
   const ShowCart = () => {
-    let subtotal = 0;
-    let shipping = 30.0;
-    let totalItems = 0;
-    state.map((item) => {
-      return (subtotal += item.price * item.qty);
-    });
-
-    state.map((item) => {
-      return (totalItems += item.qty);
-    });
-    return (
-      <>
-        <section className="h-100 gradient-custom">
-          <div className="container py-5">
-            <div className="row d-flex justify-content-center my-4">
-              <div className="col-md-8">
-                <div className="card mb-4">
-                  <div className="card-header py-3">
-                    <h5 className="mb-0">Item List</h5>
-                  </div>
-                  <div className="card-body">
-                    {state.map((item) => {
-                      return (
-                        <div key={item.id}>
-                          <div className="row d-flex align-items-center">
-                            <div className="col-lg-3 col-md-12">
-                              <div
-                                className="bg-image rounded"
-                                data-mdb-ripple-color="light"
-                              >
-                                <img
-                                  src={item.image}
-                                  // className="w-100"
-                                  alt={item.title}
-                                  width={100}
-                                  height={75}
-                                />
+        let subtotal = 0;
+        let shipping = 30.0;
+        let totalItems = 0;
+    
+        cartDetails.map((item) => {
+          subtotal += item.price * item.quantity;
+          totalItems += item.quantity;
+          console.log("Item cost:", subtotal, totalItems);
+          return item;
+        });
+    
+        return (
+          <>
+            <section className="h-100 gradient-custom">
+              <div className="container py-5">
+                <div className="row d-flex justify-content-center my-4">
+                  <div className="col-md-8">
+                    <div className="card mb-4">
+                      <div className="card-header py-3">
+                        <h5 className="mb-0">Item List</h5>
+                      </div>
+                      <div className="card-body">
+                        {cartDetails.map((item) => (
+                          <div key={item.productid}>
+                            <div className="row d-flex align-items-center">
+                              <div className="col-lg-3 col-md-12">
+                                <div
+                                  className="bg-image rounded"
+                                  data-mdb-ripple-color="light"
+                                >
+                                  <img
+                                    src={item.image}
+                                    alt={item.title}
+                                    width={100}
+                                    height={75}
+                                  />
+                                </div>
                               </div>
-                            </div>
-
-                            <div className="col-lg-5 col-md-6">
-                              <p>
-                                <strong>{item.title}</strong>
-                              </p>
-                              {/* <p>Color: blue</p>
-                              <p>Size: M</p> */}
-                            </div>
-
-                            <div className="col-lg-4 col-md-6">
-                             
-
-                              <p className="text-start text-md-center">
-                                <strong>
-                                  <span className="text-muted">{item.qty}</span>{" "}
-                                  x ₹{item.price}
-                                </strong>
-                              </p>
-                            </div>
-                            <div
-                              style={{ maxWidth: "300px", display:"flex", flexDirection: "row" }}
+    
+                              <div className="col-lg-5 col-md-6">
+                                <p>
+                                  <strong>{item.title}</strong>
+                                </p>
+                              </div>
+    
+                              <div className="col-lg-4 col-md-6">
+                                <p className="text-start text-md-center">
+                                  <strong>
+                                    <span className="text-muted">{item.quantity}</span>{" "}
+                                    x ₹{item.price}
+                                  </strong>
+                                </p>
+                              </div>
+                              <div
+                                style={{
+                                  maxWidth: "300px",
+                                  display: "flex",
+                                  flexDirection: "row",
+                                }}
                               >
                                 <button
-                                  style={{backgroundColor: "white", color:"black", border:"none"}}
-                                  
+                                  style={{
+                                    backgroundColor: "white",
+                                    color: "black",
+                                    border: "none",
+                                  }}
                                   onClick={() => {
                                     removeItem(item);
                                   }}
                                 >
                                   <i className="fas fa-minus"></i>
                                 </button>
-
-                                <p className="mx-3">{item.qty}</p>
-
-                                <button 
-                                  style={{marginLeft: "-2%", backgroundColor: "white", color:"black", border:"none"}}
+    
+                                <p className="mx-3">{item.quantity}</p>
+    
+                                <button
+                                  style={{
+                                    marginLeft: "-2%",
+                                    backgroundColor: "white",
+                                    color: "black",
+                                    border: "none",
+                                  }}
                                   onClick={() => {
+                                    console.log("item details",item);
                                     addItem(item);
                                   }}
                                 >
                                   <i className="fas fa-plus"></i>
                                 </button>
                               </div>
+                            </div>
+    
+                            <hr className="my-4" />
                           </div>
-
-                          <hr className="my-4" />
-                        </div>
-                      );
-                    })}
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-4">
+                    <div className="card mb-4">
+                      <div className="card-header py-3 bg-light">
+                        <h5 className="mb-0">Order Summary</h5>
+                      </div>
+                      <div className="card-body">
+                        <ul className="list-group list-group-flush">
+                          <li className="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                            Products ({totalItems})<span>₹{Math.round(subtotal)}</span>
+                          </li>
+                          <li className="list-group-item d-flex justify-content-between align-items-center px-0">
+                            Shipping
+                            <span>₹{shipping}</span>
+                          </li>
+                          <li className="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                            <div>
+                              <strong>Total amount</strong>
+                            </div>
+                            <span>
+                              <strong>₹{Math.round(subtotal + shipping)}</strong>
+                            </span>
+                          </li>
+                        </ul>
+    
+                        <Link
+                          to="/checkout"
+                          className="btn btn-dark btn-lg btn-block"
+                        >
+                          Go to checkout
+                        </Link>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="col-md-4">
-                <div className="card mb-4">
-                  <div className="card-header py-3 bg-light">
-                    <h5 className="mb-0">Order Summary</h5>
-                  </div>
-                  <div className="card-body">
-                    <ul className="list-group list-group-flush">
-                      <li className="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                        Products ({totalItems})<span>₹{Math.round(subtotal)}</span>
-                      </li>
-                      <li className="list-group-item d-flex justify-content-between align-items-center px-0">
-                        Shipping
-                        <span>₹{shipping}</span>
-                      </li>
-                      <li className="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-                        <div>
-                          <strong>Total amount</strong>
-                        </div>
-                        <span>
-                          <strong>₹{Math.round(subtotal + shipping)}</strong>
-                        </span>
-                      </li>
-                    </ul>
-
-                    <Link
-                      to="/checkout"
-                      className="btn btn-dark btn-lg btn-block"
-                    >
-                      Go to checkout
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </>
-    );
-  };
+            </section>
+          </>
+        );
+      };
+    
 
   return (
     <>
@@ -202,7 +235,7 @@ const Cart = () => {
       <div className="container my-3 py-3">
         <h1 className="text-center">Cart</h1>
         <hr />
-        {state.length > 0 ? <ShowCart /> : <EmptyCart />}
+        {cartDetails.length > 0 ? <ShowCart /> : <EmptyCart />}
       </div>
     </>
   );

@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useEffect, useState , useContext } from "react";
 import { Navbar } from "../components";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { UserContext } from "./UserContextProvider";
+import axios from "axios";
 const Checkout = () => {
   const state = useSelector((state) => state.handleCart);
-
+  const { user } = useContext(UserContext); 
+  const [cartDetails, setCartDetails] = useState([]);
   const EmptyCart = () => {
     return (
       <div className="container">
@@ -20,16 +23,38 @@ const Checkout = () => {
     );
   };
 
+  useEffect(() => {
+    // Fetch cart details when the component mounts or when the user changes
+    if (user && user.email) {
+      fetchCartDetails();
+    }
+  }, [user]);
+
+  const fetchCartDetails = async () => {
+    try {
+      console.log("Fetching cart details for email:", user.email);
+      const response = await axios.get("http://localhost:3000/cart", {
+        params: {
+          email: user.email,
+        },
+      });
+      console.log("Received cart details response:", response.data);
+      setCartDetails(response.data);
+    } catch (error) {
+      console.error("Error fetching cart details:", error);
+    }
+  };
+
   const ShowCheckout = () => {
     let subtotal = 0;
     let shipping = 30.0;
     let totalItems = 0;
-    state.map((item) => {
-      return (subtotal += item.price * item.qty);
+    cartDetails.map((item) => {
+      return (subtotal += item.price * item.quantity);
     });
 
-    state.map((item) => {
-      return (totalItems += item.qty);
+    cartDetails.map((item) => {
+      return (totalItems += item.quantity);
     });
     return (
       <>
