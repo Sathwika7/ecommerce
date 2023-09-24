@@ -9,7 +9,6 @@ const Cart = () => {
   const state = useSelector((state) => state.handleCart);
   const dispatch = useDispatch();
   const { user } = useContext(UserContext);
-  console.log(user.email);
   const EmptyCart = () => {
     return (
       <div className="container">
@@ -25,34 +24,44 @@ const Cart = () => {
     );
   };
 
-  const addItem = (product) => {
-    console.log("hello");
+  const addItem = async(product) => {
     console.log(user);
     console.log(product);
     // Dispatch the action to add the product to the Redux store
     dispatch(addCart(product));
-    // Create an object containing user and product details
-    const cartItem = {
-      user: user.email, 
-      product: product.id,
-    };
     console.log("user",user,"product",product);
-    axios.post("/addToCart", cartItem)
-    .then((response) => {
-      console.log("Item added to the cart:", response.data);
-    })
-    .catch((error) => {
+    try {
+      const response = await axios.post("http://localhost:3000/addToCart/", {
+        email: user.email,
+        productid: product.id,
+      }); // Use axios.post to send data in the request body
+      if (!response) {
+        throw new Error("Network response was not ok");
+      } 
+      else {
+        console.log("Item added to the cart");
+      }
+    } catch (error) {
       console.error("Error adding item to cart:", error);
-    });
+    }
   };
 
-  // const addItem = (product) => {
-  //   dispatch(addCart(product));
-  //   console.log()
 
-  // };
-  const removeItem = (product) => {
+  const removeItem = async(product) => {
     dispatch(delCart(product));
+    try {
+      const response = await axios.post("http://localhost:3000/deleteFromCart/", {
+        email: user.email,
+        productid: product.id,
+      }); // Use axios.post to send data in the request body
+      if (!response) {
+        throw new Error("Network response was not ok");
+      } else {
+        console.log("Item deleted from the cart");
+      }
+    } catch (error) {
+      console.error("Error deleting item from the cart:", error);
+    }
   };
 
   const ShowCart = () => {
@@ -115,8 +124,7 @@ const Cart = () => {
                               </p>
                             </div>
                             <div
-                        
-                                style={{ maxWidth: "300px", display:"flex", flexDirection: "row" }}
+                              style={{ maxWidth: "300px", display:"flex", flexDirection: "row" }}
                               >
                                 <button
                                   style={{backgroundColor: "white", color:"black", border:"none"}}

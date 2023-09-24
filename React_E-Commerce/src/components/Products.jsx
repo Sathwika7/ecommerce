@@ -1,22 +1,37 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useDispatch } from "react-redux";
 import { addCart } from "../redux/action";
 import axios from 'axios';
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-
+import { UserContext } from '../pages/UserContextProvider';
 import { Link } from "react-router-dom";
 
 const Products = () => {
   const [data1, setData1] = useState([]);
   const [filter, setFilter] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { user } = useContext(UserContext);
   let componentMounted = true;
 
   const dispatch = useDispatch();
 
-  const addProduct = (product) => {
-    // console.log("product page", product);
+  const addProduct = async (product) => {
+    console.log("product page view", product);
+    console.log("product page view", user);
+    try {
+      const response = await axios.post("http://localhost:3000/addToCart/", {
+        email: user.email,
+        productid: product.id,
+      }); // Use axios.post to send data in the request body
+      if (!response) {
+        throw new Error("Network response was not ok");
+      } else {
+        console.log("Item added to the cart");
+      }
+    } catch (error) {
+      console.error("Error adding item to cart:", error);
+    }
     dispatch(addCart(product));
   };
 
@@ -25,12 +40,10 @@ const Products = () => {
       setLoading(true);
       try {
         const response = await axios.get("http://localhost:3000/api/productsinfo");
-        // Replace with your API endpoint
         console.log(response.data);
         if (!response) {
           throw new Error("Network response was not ok");
         }
-        // const products = await response.json();
         setData1(response.data);
         setFilter(response.data);
         setLoading(false);

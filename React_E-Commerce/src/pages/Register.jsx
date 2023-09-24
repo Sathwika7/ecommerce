@@ -14,17 +14,10 @@ const [userDetails,setUserDetails] = useState({
     email : ''
 })
 
-const inputHandler = (e) =>{
-   
-setUserDetails({...userDetails, [e.target.id] : e.target.value})
-
+const inputHandler = (e) =>{   
+  setUserDetails({...userDetails, [e.target.id] : e.target.value})
 }
 
-
-// const HandleSignUp = async() =>{
-//     const response=await axios.post("http://localhost:3000/registration", userDetails);
-//     console.log(response);
-// }
 const navigate=useNavigate();
 const handleSignUp = async() => {
 
@@ -45,7 +38,7 @@ const handleSignUp = async() => {
           alert("Signup error");
         }
         // alert("Registration Successful");
-        navigate("/login");
+        navigate("/");
       } 
       catch(error) 
       {

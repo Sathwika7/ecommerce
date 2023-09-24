@@ -70,35 +70,117 @@ app.post("/registration", (req, res) => {
   );
 });
 
-app.post("http://localhost:3000/addToCart", (req, res) => {
-  const { userId, productId, quantity } = req.body;
+// app.post("/addToCart", (req, res) => {
+//   const { email, productid } = req.body;
+//   // Insert the cart item into the database
+//   const quantity = 1;
+//   const sql = "INSERT INTO usercart (email, productid, quantity) VALUES (?, ?, ?)";
+//   db.query(sql, [email, productid, quantity], (err, result) => {
+//     if (err) {
+//       console.error("Error adding item to cart:", err);
+//       res.status(500).json({ error: "Internal Server Error" });
+//     } else {
+//       res.status(200).json({ message: "Item added to cart" });
+//     }
+//   });
+// });
 
-  // Insert the cart item into the database
-  const sql = "INSERT INTO user_cart (user_id, product_id, quantity) VALUES (?, ?, ?)";
-  db.query(sql, [userId, productId, quantity], (err, result) => {
+app.post("/addToCart", (req, res) => {
+  const { email, productid } = req.body;
+  // Check if a row with the given email and product ID exists
+  const checkExistenceSql = "SELECT * FROM usercart WHERE email = ? AND productid = ?";
+  db.query(checkExistenceSql, [email, productid], (err, rows) => {
     if (err) {
-      console.error("Error adding item to cart:", err);
+      console.error("Error checking cart item existence:", err);
       res.status(500).json({ error: "Internal Server Error" });
     } else {
-      res.status(200).json({ message: "Item added to cart" });
+      if (rows.length === 0) {
+        // If no rows exist, insert a new record with quantity as 1
+        const insertSql = "INSERT INTO usercart (email, productid, quantity) VALUES (?, ?, ?)";
+        db.query(insertSql, [email, productid, 1], (insertErr) => {
+          if (insertErr) {
+            console.error("Error adding item to cart:", insertErr);
+            res.status(500).json({ error: "Internal Server Error" });
+          } else {
+            res.status(200).json({ message: "Item added to cart" });
+          }
+        });
+      } else {
+        // If a row exists, update the quantity by increasing it by 1
+        const existingQuantity = rows[0].quantity;
+        const updateSql = "UPDATE usercart SET quantity = ? WHERE email = ? AND productid = ?";
+        db.query(updateSql, [existingQuantity + 1, email, productid], (updateErr) => {
+          if (updateErr) {
+            console.error("Error updating item quantity:", updateErr);
+            res.status(500).json({ error: "Internal Server Error" });
+          } else {
+            res.status(200).json({ message: "Item quantity updated in cart" });
+          }
+        });
+      }
     }
   });
 });
 
-app.delete("/api/deleteFromCart", (req, res) => {
-  const { userId, productId } = req.body;
-
-  // Delete the cart item from the database
-  const sql = "DELETE FROM user_cart WHERE user_id = ? AND product_id = ?";
-  db.query(sql, [userId, productId], (err, result) => {
-    if (err) {
-      console.error("Error deleting item from cart:", err);
+app.post("/deleteFromCart", (req, res) => {
+  const { email, productid } = req.body;
+  console.log("server side",email,productid);
+  // Check if the product exists in the user's cart.
+  const selectSql = "SELECT * FROM usercart WHERE email = ? AND productid = ?";
+  db.query(selectSql, [email, productid], (selectErr, selectResult) => {
+    if (selectErr) {
+      console.error("Error checking if product exists in cart:", selectErr);
       res.status(500).json({ error: "Internal Server Error" });
     } else {
-      res.status(200).json({ message: "Item deleted from cart" });
+      if (selectResult.length > 0) {
+        // Product exists in the cart, so update the quantity.
+        const existingQuantity = selectResult[0].quantity;
+        if (existingQuantity > 1) {
+          // If quantity is greater than 1, decrement it.
+          const updateSql = "UPDATE usercart SET quantity = ? WHERE email = ? AND productid = ?";
+          db.query(updateSql, [existingQuantity - 1, email, productid], (updateErr) => {
+            if (updateErr) {
+              console.error("Error updating item quantity:", updateErr);
+              res.status(500).json({ error: "Internal Server Error" });
+            } else {
+              res.status(200).json({ message: "Item quantity decremented in cart" });
+            }
+          });
+        } else {
+          // If quantity is 1, delete the row.
+          const deleteSql = "DELETE FROM usercart WHERE email = ? AND productid = ?";
+          db.query(deleteSql, [email, productid], (deleteErr, deleteResult) => {
+            if (deleteErr) {
+              console.error("Error deleting cart item:", deleteErr);
+              res.status(500).json({ error: "Internal Server Error" });
+            } else {
+              res.status(200).json({ message: "Cart item deleted successfully" });
+            }
+          });
+        }
+      } else {
+        // Product does not exist in the cart.
+        res.status(404).json({ message: "Item not found in cart" });
+      }
     }
   });
 });
+
+
+// app.delete("/deleteFromCart", (req, res) => {
+//   const { email, productId } = req.body;
+
+//   // Delete the cart item from the database
+//   const sql = "DELETE FROM user_cart WHERE user_id = ? AND product_id = ?";
+//   db.query(sql, [userId, productId], (err, result) => {
+//     if (err) {
+//       console.error("Error deleting item from cart:", err);
+//       res.status(500).json({ error: "Internal Server Error" });
+//     } else {
+//       res.status(200).json({ message: "Item deleted from cart" });
+//     }
+//   });
+// });
 
 app.get('/api/productsinfo', (req, res) => {
     const query = 'SELECT * FROM products'; // Replace with your actual query

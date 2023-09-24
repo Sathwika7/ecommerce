@@ -2,21 +2,35 @@ import React, { useEffect, useState, useContext } from "react";
 import Skeleton from "react-loading-skeleton";
 import { Link, useParams } from "react-router-dom";
 import Marquee from "react-fast-marquee";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addCart } from "../redux/action";
 import { Navbar } from "../components";
 import axios from 'axios';
-// import { UserContext } from './UserContextProvider';
+import { UserContext } from './UserContextProvider';
 const Product = () => {
   const { id } = useParams();
   const [product, setProduct] = useState({});
-  const [similarProducts, setSimilarProducts] = useState([]);
+  // const [similarProducts, setSimilarProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [loading2, setLoading2] = useState(true);
-  // const { user } = useContext(UserContext);
+  // const [loading2, setLoading2] = useState(true);
+  const { user } = useContext(UserContext);
   const dispatch = useDispatch();
-  // console.log(user.email);
-  const addProduct = (product) => {
+  const addProduct = async(product) => {
+    console.log("detailed product view", product);
+    console.log("detailed product view user details",user);
+    try {
+      const response = await axios.post("http://localhost:3000/addToCart/", {
+        email: user.email,
+        productid: product.id,
+      });
+      if (!response) {
+        throw new Error("Network response was not ok");
+      } else {
+        console.log("Item added to the cart");
+      }
+    } catch (error) {
+      console.error("Error adding item to cart:", error);
+    }
     dispatch(addCart(product));
   };
 
@@ -36,19 +50,19 @@ const Product = () => {
         setLoading(false);
       }
 
-      try {
-        // Fetch similar products from your server based on category
-        const response2 = await fetch(`https://loalhost:3000/api/products/similar/${product.category}`); // Replace with your API endpoint
-        if (!response2) {
-          throw Error("Network response was not ok");
-        }
-        // const data2 = await response2.json();
-        setSimilarProducts(response2.data);
-        setLoading2(false);
-      } catch (error) {
-        console.error("Error fetching similar products:", error);
-        setLoading2(false);
-      }
+  //     try {
+  //       // Fetch similar products from your server based on category
+  //       const response2 = await fetch(`https://loalhost:3000/api/products/similar/${product.category}`); // Replace with your API endpoint
+  //       if (!response2) {
+  //         throw Error("Network response was not ok");
+  //       }
+  //       // const data2 = await response2.json();
+  //       setSimilarProducts(response2.data);
+  //       setLoading2(false);
+  //     } catch (error) {
+  //       console.error("Error fetching similar products:", error);
+  //       setLoading2(false);
+  //     }
     };
 
     fetchData();
