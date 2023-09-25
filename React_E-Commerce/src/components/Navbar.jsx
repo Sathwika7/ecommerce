@@ -4,17 +4,17 @@ import axios from 'axios';
 const Navbar = () => {
     const [cartDetails, setCartDetails] = useState([]);
     const userEmailFromStorage = sessionStorage.getItem("userEmail");
-    
-//     useEffect(() => {
-//       const userEmail = sessionStorage.getItem("userEmail");
-//       if(userEmail) {
-//         fetchCartDetails();
-//       }
-//    });
+    const isLoggedIn = userEmailFromStorage !== null;
 
+    useEffect(() => {
+        if (isLoggedIn) {
+            fetchCartDetails();
+        }
+    }, [userEmailFromStorage]);
+    
     const handleLogout = () => {
       sessionStorage.removeItem("userEmail");
-  };
+    };
   
     const fetchCartDetails = async () => {
         try {
@@ -55,10 +55,11 @@ const Navbar = () => {
                       <NavLink to="/" className="btn btn-outline-dark m-2">Login</NavLink>
                       <NavLink to="/register" className="btn btn-outline-dark m-2"><i className="fa fa-user-plus mr-1"></i> Register</NavLink>
                       <NavLink to="/cart" className="btn btn-outline-dark m-2"><i className="fa fa-cart-shopping mr-1"></i> Cart ({cartDetails.length}) </NavLink>
+                      {isLoggedIn ? (
                       <NavLink to="/" className="btn btn-outline-dark m-2" onClick={handleLogout}>
                         <i className="fa fa-cart-logout mr-1"></i>Logout
                       </NavLink>
-
+                      ) : null}
                   </div>
               </div>
           </div>

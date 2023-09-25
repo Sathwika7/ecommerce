@@ -11,7 +11,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
       <div>
-        <ToastContainer autoClose={2000}/>
+        <ToastContainer autoClose={1000}/>
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/product" element={<Products />} />
