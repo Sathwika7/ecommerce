@@ -1,9 +1,11 @@
-// UserContextProvider.js
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
 
-const UserContext = createContext();
+// Create a context for user-related data
+export const UserContext = createContext();
 
+// Create a UserContextProvider component
 export const UserContextProvider = ({ children }) => {
+  // Define user state and setUser function
   const [user, setUser] = useState(null);
 
   return (
@@ -12,9 +14,3 @@ export const UserContextProvider = ({ children }) => {
     </UserContext.Provider>
   );
 };
-
-export const useUser = () => {
-  return useContext(UserContext);
-};
-
-export { UserContext }; // Export UserContext

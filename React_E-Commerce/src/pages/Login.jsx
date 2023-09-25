@@ -3,6 +3,8 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Navbar } from "../components";
 import { UserContext } from "./UserContextProvider";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './login_register.css';
 function Login() {
   const { setUser } = useContext(UserContext); 
@@ -25,14 +27,14 @@ function Login() {
       if (response.status === 200) {
         const user = response.data.user;
         setUser(user);
+        toast.success("Login successful"); 
         navigate("/home");
-        alert("Login Successful");
       } else {
         console.log(userDetails);
-        alert("Login error");
+        toast.error("Login error");
       }
     } catch (error) {
-      alert("Please enter valid details");
+      toast.error("Please enter valid details");
     }
   };
 

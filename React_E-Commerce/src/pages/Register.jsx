@@ -3,6 +3,8 @@ import axios from "axios";
 import { Link,useNavigate } from "react-router-dom";
 import "./login_register.css";
 import { Navbar } from "../components";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function Register() {
 //   const [username, setUsername] = useState('');
 //   const [password, setPassword] = useState('');
@@ -31,27 +33,27 @@ const handleSignUp = async() => {
         console.log(response);
         if(response.status === 201)
         {
-          alert("Successfully registered");
+          toast.success("Registration successful"); 
         }
         else
         {
-          alert("Signup error");
+          toast.error("Signup error");
         }
         // alert("Registration Successful");
         navigate("/");
       } 
       catch(error) 
       {
-        alert("Please enter valid details");
+        toast.error("Please enter valid details");
       }
     }
     else if(emailRegex.test(userDetails.email) === false)
     {
-      alert("Please enter a valid email");
+      toast.error("Please enter a valid email");
     }
     else
     {
-      alert("Password should contain minimum 8 characters and should contain one uppercase letter, one lowercase letter and one special character");
+      toast.error("Password should contain minimum 8 characters and should contain one uppercase letter, one lowercase letter and one special character");
     }
   };
 return (

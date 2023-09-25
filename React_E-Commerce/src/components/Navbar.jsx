@@ -5,7 +5,7 @@ import { UserContext } from "../pages/UserContextProvider";
 import axios from 'axios';
 const Navbar = () => {
     const state = useSelector(state => state.handleCart);
-    const { user } = useContext(UserContext); 
+    const { user, setUser } = useContext(UserContext);
     const [cartDetails, setCartDetails] = useState([]);
     useEffect(() => {
         // Fetch cart details when the component mounts or when the user changes
@@ -13,6 +13,13 @@ const Navbar = () => {
           fetchCartDetails();
         }
       }, [user]);
+      
+      const handleLogout = () => {
+        // Perform logout actions, such as clearing user context or local storage.
+        // Example: Clear user context
+        setUser(null); // Assuming setUser is the function to update the user context
+      };
+      
     
       const fetchCartDetails = async () => {
         try {
@@ -53,7 +60,10 @@ const Navbar = () => {
                         <NavLink to="/" className="btn btn-outline-dark m-2">Login</NavLink>
                         <NavLink to="/register" className="btn btn-outline-dark m-2"><i className="fa fa-user-plus mr-1"></i> Register</NavLink>
                         <NavLink to="/cart" className="btn btn-outline-dark m-2"><i className="fa fa-cart-shopping mr-1"></i> Cart ({cartDetails.length}) </NavLink>
-                        <NavLink to="/" className="btn btn-outline-dark m-2"><i className="fa fa-cart-logout mr-1"></i>Logout</NavLink>
+                        <NavLink to="/" className="btn btn-outline-dark m-2" onClick={handleLogout}>
+                          <i className="fa fa-cart-logout mr-1"></i>Logout
+                        </NavLink>
+
                     </div>
                 </div>
             </div>
