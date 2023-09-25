@@ -7,7 +7,7 @@ const Navbar = () => {
     const isLoggedIn = userEmailFromStorage !== null;
 
     useEffect(() => {
-        if (isLoggedIn) {
+        if (userEmailFromStorage) {
             fetchCartDetails();
         }
     }, [userEmailFromStorage]);
