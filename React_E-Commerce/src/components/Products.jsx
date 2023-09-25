@@ -12,16 +12,17 @@ const Products = () => {
   const [filter, setFilter] = useState([]);
   const [loading, setLoading] = useState(false);
   const { user } = useContext(UserContext);
-  let componentMounted = true;
-
   const dispatch = useDispatch();
+
+  // Retrieve user email from session storage
+  const userEmailFromStorage = sessionStorage.getItem("userEmail");
 
   const addProduct = async (product) => {
     console.log("product page view", product);
     console.log("product page view", user);
     try {
       const response = await axios.post("http://localhost:3000/addToCart/", {
-        email: user.email,
+        email: userEmailFromStorage, // Use the retrieved email
         productid: product.id,
       }); // Use axios.post to send data in the request body
       if (!response) {
@@ -53,13 +54,7 @@ const Products = () => {
       }
     };
 
-    if (componentMounted) {
-      getProducts();
-    }
-
-    return () => {
-      componentMounted = false;
-    };
+    getProducts();
   }, []);
 
   const Loading = () => {

@@ -1,12 +1,13 @@
-import React, { useEffect, useState , useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { Navbar } from "../components";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { UserContext } from "./UserContextProvider";
+// import { UserContext } from "./UserContextProvider";
 import axios from "axios";
+
 const Checkout = () => {
   const state = useSelector((state) => state.handleCart);
-  const { user } = useContext(UserContext); 
+  // const { user } = useContext(UserContext);
   const [cartDetails, setCartDetails] = useState([]);
   const EmptyCart = () => {
     return (
@@ -23,19 +24,22 @@ const Checkout = () => {
     );
   };
 
+
+  // Retrieve user email from session storage
+  const userEmailFromStorage = sessionStorage.getItem("userEmail");
+
   useEffect(() => {
-    // Fetch cart details when the component mounts or when the user changes
-    if (user && user.email) {
+    if (userEmailFromStorage) {
       fetchCartDetails();
     }
-  }, [user]);
+ }, [userEmailFromStorage]);
 
   const fetchCartDetails = async () => {
     try {
-      console.log("Fetching cart details for email:", user.email);
+      console.log("Fetching cart details for email:", userEmailFromStorage);
       const response = await axios.get("http://localhost:3000/cart", {
         params: {
-          email: user.email,
+          email: userEmailFromStorage, // Use the retrieved email
         },
       });
       console.log("Received cart details response:", response.data);

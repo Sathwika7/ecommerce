@@ -7,20 +7,23 @@ import { addCart } from "../redux/action";
 import { Navbar } from "../components";
 import axios from 'axios';
 import { UserContext } from './UserContextProvider';
+
 const Product = () => {
   const { id } = useParams();
   const [product, setProduct] = useState({});
-  // const [similarProducts, setSimilarProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  // const [loading2, setLoading2] = useState(true);
   const { user } = useContext(UserContext);
   const dispatch = useDispatch();
-  const addProduct = async(product) => {
+
+  // Retrieve user email from session storage
+  const userEmailFromStorage = sessionStorage.getItem("userEmail");
+
+  const addProduct = async (product) => {
     console.log("detailed product view", product);
-    console.log("detailed product view user details",user);
+    console.log("detailed product view user details", user);
     try {
       const response = await axios.post("http://localhost:3000/addToCart/", {
-        email: user.email,
+        email: userEmailFromStorage, // Use the retrieved email
         productid: product.id,
       });
       if (!response) {
@@ -38,36 +41,22 @@ const Product = () => {
     const fetchData = async () => {
       try {
         // Fetch product details from your server using the product ID
-        const response = await axios(`http://localhost:3000/api/products/${id}`); // Replace with your API endpoint
+        const response = await axios(`http://localhost:3000/api/products/${id}`);
         if (!response) {
           throw new Error("Network response was not ok");
         }
-        // const data = await response.json();
         setProduct(response.data);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching product details:", error);
         setLoading(false);
       }
-
-  //     try {
-  //       // Fetch similar products from your server based on category
-  //       const response2 = await fetch(`https://loalhost:3000/api/products/similar/${product.category}`); // Replace with your API endpoint
-  //       if (!response2) {
-  //         throw Error("Network response was not ok");
-  //       }
-  //       // const data2 = await response2.json();
-  //       setSimilarProducts(response2.data);
-  //       setLoading2(false);
-  //     } catch (error) {
-  //       console.error("Error fetching similar products:", error);
-  //       setLoading2(false);
-  //     }
     };
 
     fetchData();
-  }, [id, product.category]);
+  }, [id]);
 
+ 
   const Loading = () => {
     return (
       <div className="container my-5 py-2">
@@ -126,85 +115,11 @@ const Product = () => {
     );
   };
 
-  // const Loading2 = () => {
-  //   return (
-  //     <div className="my-4 py-4">
-  //       <div className="d-flex">
-  //         <div className="mx-4">
-  //           <Skeleton height={400} width={250} />
-  //         </div>
-  //         <div className="mx-4">
-  //           <Skeleton height={400} width={250} />
-  //         </div>
-  //         <div className="mx-4">
-  //           <Skeleton height={400} width={250} />
-  //         </div>
-  //         <div className="mx-4">
-  //           <Skeleton height={400} width={250} />
-  //         </div>
-  //       </div>
-  //     </div>
-  //   );
-  // };
-
-  // const ShowSimilarProduct = () => {
-  //   return (
-  //     <div className="py-4 my-4">
-  //       <div className="d-flex">
-  //         {similarProducts.map((item) => {
-  //           return (
-  //             <div key={item.id} className="card mx-4 text-center">
-  //               <img
-  //                 className="card-img-top p-3"
-  //                 src={item.image}
-  //                 alt="Card"
-  //                 height={300}
-  //                 width={300}
-  //               />
-  //               <div className="card-body">
-  //                 <h5 className="card-title">
-  //                   {item.title.substring(0, 15)}...
-  //                 </h5>
-  //               </div>
-  //               <div className="card-body">
-  //                 <Link
-  //                   to={"/product/" + item.id}
-  //                   className="btn btn-dark m-1"
-  //                 >
-  //                   Buy Now
-  //                 </Link>
-  //                 <button
-  //                   className="btn btn-dark m-1"
-  //                   onClick={() => addProduct(item)}
-  //                 >
-  //                   Add to Cart
-  //                 </button>
-  //               </div>
-  //             </div>
-  //           );
-  //         })}
-  //       </div>
-  //     </div>
-  //   );
-  // };
-
   return (
     <>
       <Navbar />
       <div className="container">
         <div className="row">{loading ? <Loading /> : <ShowProduct />}</div>
-        {/* <div className="row my-5 py-5">
-          <div className="d-none d-md-block">
-            <h2 className="">You may also Like</h2>
-            <Marquee
-              pauseOnHover={true}
-              pauseOnClick={true}
-              speed={50}
-            >
-              {loading2 ? <Loading2 /> : <ShowSimilarProduct />}
-            </Marquee>
-          </div>
-        </div> */}
       </div>
     </>
   );

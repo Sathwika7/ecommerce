@@ -12,27 +12,19 @@ const Cart = () => {
   const dispatch = useDispatch();
   const { user } = useContext(UserContext);
 
+  // Retrieve user email from session storage
+  const userEmailFromStorage = sessionStorage.getItem("userEmail");
+
   const EmptyCart = () => {
-    return (
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12 py-5 bg-light text-center">
-            <h4 className="p-3 display-5">Your Cart is Empty</h4>
-            <Link to="/product" className="btn  btn-outline-dark mx-4">
-              <i className="fa fa-arrow-left"></i> Continue Shopping
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
+    // ...
   };
 
   const fetchCartDetails = async () => {
     try {
-      console.log("Fetching cart details for email:", user.email);
+      console.log("Fetching cart details for email:", userEmailFromStorage);
       const response = await axios.get("http://localhost:3000/cart", {
         params: {
-          email: user.email,
+          email: userEmailFromStorage, // Use the retrieved email
         },
       });
       console.log("Received cart details response:", response.data);
@@ -43,21 +35,20 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    // Fetch cart details when the component mounts or when the user changes
-    if (user && user.email) {
+    if (userEmailFromStorage) {
       fetchCartDetails();
     }
-  }, [user]);
+ }, [user]);
 
   const addItem = async (product) => {
-    console.log(user);
+    console.log(userEmailFromStorage);
     console.log(product);
     // Dispatch the action to add the product to the Redux store
     // dispatch(addCart(product));
-    console.log("user", user, "product", product);
+    console.log("user", userEmailFromStorage, "product", product);
     try {
       const response = await axios.post("http://localhost:3000/addToCart/", {
-        email: user.email,
+        email: userEmailFromStorage,
         productid: product.productid,
       });
       if (!response) {
@@ -75,7 +66,7 @@ const Cart = () => {
     // dispatch(delCart(product));
     try {
       const response = await axios.post("http://localhost:3000/deleteFromCart/", {
-        email: user.email,
+        email: userEmailFromStorage,
         productid: product.productid,
       });
       if (!response) {

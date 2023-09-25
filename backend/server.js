@@ -22,9 +22,6 @@ db.connect((err) => {
    console.log('Connected to the database');
 });
 
-app.get("/", (req,res) =>{
-   res.send("Hi from ")
-})
 
 app.post("/registration", (req, res) => {
    console.log("hello");

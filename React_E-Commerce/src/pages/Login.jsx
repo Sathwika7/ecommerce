@@ -27,7 +27,11 @@ function Login() {
       if (response.status === 200) {
         const user = response.data.user;
         setUser(user);
-        toast.success("Login successful"); 
+  
+        // Store user email in session storage
+        sessionStorage.setItem("userEmail", user.email);
+  
+        toast.success("Login successful");
         navigate("/home");
       } else {
         console.log(userDetails);
@@ -37,6 +41,7 @@ function Login() {
       toast.error("Please enter valid details");
     }
   };
+  
 
   return (
     <>
