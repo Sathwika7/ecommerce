@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { Link, useParams } from "react-router-dom";
 import { Navbar } from "../components";
@@ -29,7 +29,7 @@ const Product = () => {
     console.error("Error adding item to cart:", error);
   }
   };
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {

@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link,useNavigate } from "react-router-dom";
 import "./login_register.css";
 import { Navbar } from "../components";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 function Register() {
 //   const [username, setUsername] = useState('');

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -10,7 +10,7 @@ const Products = () => {
   const [filter, setFilter] = useState([]);
   const [loading, setLoading] = useState(false);
   const userEmailFromStorage = sessionStorage.getItem("userEmail");
-
+  
   const addProduct = async (product) => {
     console.log("product page view", product);
     console.log("product page view", userEmailFromStorage);
@@ -21,7 +21,7 @@ const Products = () => {
       }); 
       if (!response) {
         throw new Error("Network response was not ok");
-      } else {
+      }else {
         toast.info("Item added to the cart");
       }
     } catch (error) {
@@ -29,6 +29,7 @@ const Products = () => {
     }
   };
 
+  
   useEffect(() => {
     const getProducts = async () => {
       setLoading(true);

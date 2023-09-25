@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client';
 import '../node_modules/font-awesome/css/font-awesome.min.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Provider } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
 import { Home, Product, Products, AboutPage, Cart, Login, Register, Checkout, PageNotFound } from "./pages"
@@ -11,7 +10,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
       <div>
-        <ToastContainer autoClose={1000}/>
+        <ToastContainer autoClose={500}/>
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/product" element={<Products />} />
