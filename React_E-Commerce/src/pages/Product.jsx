@@ -1,40 +1,33 @@
 import React, { useEffect, useState, useContext } from "react";
 import Skeleton from "react-loading-skeleton";
 import { Link, useParams } from "react-router-dom";
-import Marquee from "react-fast-marquee";
-import { useDispatch, useSelector } from "react-redux";
-import { addCart } from "../redux/action";
 import { Navbar } from "../components";
+import { toast  } from "react-toastify";
 import axios from 'axios';
-import { UserContext } from './UserContextProvider';
 
 const Product = () => {
   const { id } = useParams();
   const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(true);
-  const { user } = useContext(UserContext);
-  const dispatch = useDispatch();
-
-  // Retrieve user email from session storage
   const userEmailFromStorage = sessionStorage.getItem("userEmail");
-
+  
   const addProduct = async (product) => {
     console.log("detailed product view", product);
-    console.log("detailed product view user details", user);
-    try {
+    console.log("detailed product view user email", userEmailFromStorage);
+    try 
+    {
       const response = await axios.post("http://localhost:3000/addToCart/", {
-        email: userEmailFromStorage, // Use the retrieved email
-        productid: product.id,
-      });
-      if (!response) {
+      email: userEmailFromStorage, // Use the retrieved email
+      productid: product.id,
+    });
+    if (!response) {
         throw new Error("Network response was not ok");
-      } else {
-        console.log("Item added to the cart");
-      }
-    } catch (error) {
-      console.error("Error adding item to cart:", error);
+    } else {
+      toast.info("Item added to the cart");
     }
-    dispatch(addCart(product));
+  }catch(error){
+    console.error("Error adding item to cart:", error);
+  }
   };
 
   useEffect(() => {
@@ -52,7 +45,6 @@ const Product = () => {
         setLoading(false);
       }
     };
-
     fetchData();
   }, [id]);
 

@@ -1,13 +1,9 @@
 import React, { useEffect, useContext, useState } from "react";
 import { Navbar } from "../components";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-// import { UserContext } from "./UserContextProvider";
 import axios from "axios";
 
 const Checkout = () => {
-  const state = useSelector((state) => state.handleCart);
-  // const { user } = useContext(UserContext);
   const [cartDetails, setCartDetails] = useState([]);
   const EmptyCart = () => {
     return (
@@ -25,9 +21,7 @@ const Checkout = () => {
   };
 
 
-  // Retrieve user email from session storage
   const userEmailFromStorage = sessionStorage.getItem("userEmail");
-
   useEffect(() => {
     if (userEmailFromStorage) {
       fetchCartDetails();
@@ -318,7 +312,7 @@ const Checkout = () => {
       <div className="container my-3 py-3">
         <h1 className="text-center">Checkout</h1>
         <hr />
-        {state.length ? <ShowCheckout /> : <EmptyCart />}
+        {cartDetails.length ? <ShowCheckout /> : <EmptyCart />}
       </div>
     </>
   );

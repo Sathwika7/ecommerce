@@ -26,34 +26,41 @@ const handleSignUp = async() => {
     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
     /*Password should contain minimum 8 characters and should contain one uppercase, one lowercase and one special character*/
     const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[@#$%^&+=!])(?=.*\d).{8,}$/;
-    if(emailRegex.test(userDetails.email) && passwordRegex.test(userDetails.password))
+    if(userDetails.username == '' ||   userDetails.email == '' || userDetails.password == '')
     {
-      try {
-        const response=await axios.post("http://localhost:3000/registration", userDetails);
-        console.log(response);
-        if(response.status === 201)
-        {
-          toast.success("Registration successful"); 
-        }
-        else
-        {
-          toast.error("Signup error");
-        }
-        // alert("Registration Successful");
-        navigate("/");
-      } 
-      catch(error) 
-      {
-        toast.error("Please enter valid details");
-      }
-    }
-    else if(emailRegex.test(userDetails.email) === false)
-    {
-      toast.error("Please enter a valid email");
+      toast.error("Please fill in all the fileds");
     }
     else
     {
-      toast.error("Password should contain minimum 8 characters and should contain one uppercase letter, one lowercase letter and one special character");
+      if(emailRegex.test(userDetails.email) && passwordRegex.test(userDetails.password))
+      {
+        try {
+          const response=await axios.post("http://localhost:3000/registration", userDetails);
+          console.log(response);
+          if(response.status === 201)
+          {
+            toast.success("Registration successful"); 
+          }
+          else
+          {
+            toast.error("Signup error");
+          }
+          // alert("Registration Successful");
+          navigate("/");
+        } 
+        catch(error) 
+        {
+          toast.error("Please enter valid details");
+        }
+      }
+      else if(emailRegex.test(userDetails.email) === false)
+      {
+        toast.error("Please enter a valid email");
+      }
+      else
+      {
+        toast.error("Password should contain minimum 8 characters and should contain one uppercase letter, one lowercase letter and one special character");
+      }
     }
   };
 return (

@@ -1,30 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { UserContext } from "../pages/UserContextProvider";
 import axios from 'axios';
-
 const Navbar = () => {
-    const state = useSelector(state => state.handleCart);
-    const { user } = useContext(UserContext); 
     const [cartDetails, setCartDetails] = useState([]);
-
-    // Retrieve user email from session storage
     const userEmailFromStorage = sessionStorage.getItem("userEmail");
+    
+//     useEffect(() => {
+//       const userEmail = sessionStorage.getItem("userEmail");
+//       if(userEmail) {
+//         fetchCartDetails();
+//       }
+//    });
 
-    useEffect(() => {
-      const userEmail = sessionStorage.getItem("userEmail");
-      if (userEmail) {
-        fetchCartDetails();
-      }
-   }, [user]);
-  
     const handleLogout = () => {
-      // Remove user email from session storage
       sessionStorage.removeItem("userEmail");
   };
   
-
     const fetchCartDetails = async () => {
         try {
             console.log("Fetching cart details for email:", userEmailFromStorage);

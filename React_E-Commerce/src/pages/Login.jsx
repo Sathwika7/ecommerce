@@ -2,47 +2,47 @@ import React, { useState , useContext } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Navbar } from "../components";
-import { UserContext } from "./UserContextProvider";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './login_register.css';
 function Login() {
-  const { setUser } = useContext(UserContext); 
   const [userDetails, setUserDetails] = useState({
     email: '',
     password: ''
   });
 
-
   const inputHandler = (e) => {
     setUserDetails({ ...userDetails, [e.target.id]: e.target.value });
   }
-
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    try {
-      const response = await axios.post("http://localhost:3000/logindata", userDetails);
-      console.log(response);
-      if (response.status === 200) {
-        const user = response.data.user;
-        setUser(user);
-  
-        // Store user email in session storage
-        sessionStorage.setItem("userEmail", user.email);
-  
-        toast.success("Login successful");
-        navigate("/home");
-      } else {
-        console.log(userDetails);
-        toast.error("Login error");
+    if(userDetails.email != '' && userDetails.password != '')
+    {
+      try {
+        const response = await axios.post("http://localhost:3000/logindata", userDetails);
+        console.log(response);
+        if (response.status === 200) {
+          const user = response.data.user;
+          // setUser(user);
+          // Store user email in session storage
+          sessionStorage.setItem("userEmail", user.email);
+          toast.success("Login successful");
+          navigate("/home");
+        } else {
+          console.log(userDetails);
+          toast.error("Login error");
+        }
+      } catch (error) {
+        toast.error("Please enter valid details");
       }
-    } catch (error) {
-      toast.error("Please enter valid details");
+    }
+    else
+    {
+      toast.error("Please fill in all the fileds");
     }
   };
   
-
   return (
     <>
       <Navbar />

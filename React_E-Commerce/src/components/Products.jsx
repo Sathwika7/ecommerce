@@ -1,39 +1,32 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useDispatch } from "react-redux";
-import { addCart } from "../redux/action";
 import axios from 'axios';
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { UserContext } from '../pages/UserContextProvider';
+import { toast  } from "react-toastify";
 import { Link } from "react-router-dom";
 
 const Products = () => {
   const [data1, setData1] = useState([]);
   const [filter, setFilter] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { user } = useContext(UserContext);
-  const dispatch = useDispatch();
-
-  // Retrieve user email from session storage
   const userEmailFromStorage = sessionStorage.getItem("userEmail");
 
   const addProduct = async (product) => {
     console.log("product page view", product);
-    console.log("product page view", user);
+    console.log("product page view", userEmailFromStorage);
     try {
       const response = await axios.post("http://localhost:3000/addToCart/", {
-        email: userEmailFromStorage, // Use the retrieved email
+        email: userEmailFromStorage, 
         productid: product.id,
-      }); // Use axios.post to send data in the request body
+      }); 
       if (!response) {
         throw new Error("Network response was not ok");
       } else {
-        console.log("Item added to the cart");
+        toast.info("Item added to the cart");
       }
     } catch (error) {
       console.error("Error adding item to cart:", error);
     }
-    dispatch(addCart(product));
   };
 
   useEffect(() => {
@@ -53,7 +46,6 @@ const Products = () => {
         setLoading(false);
       }
     };
-
     getProducts();
   }, []);
 
@@ -89,6 +81,7 @@ const Products = () => {
     const updatedList = data1.filter((item) => item.category === cat);
     setFilter(updatedList);
   }
+
   const ShowProducts = () => {
     return (
       <>
@@ -101,8 +94,6 @@ const Products = () => {
           <button className="btn btn-outline-dark btn-sm m-2" onClick={() => filterProduct("jewelery")}>Jewelery</button>
           <button className="btn btn-outline-dark btn-sm m-2" onClick={() => filterProduct("electronics")}>Electronics</button>
         </div>
-
-
         {filter.map((product) => {
           return (
             <div id={product.id} key={product.id} className="col-md-4 col-sm-6 col-xs-8 col-12 mb-4">
@@ -136,7 +127,6 @@ const Products = () => {
                 </div>
               </div>
             </div>
-
           );
         })}
       </>

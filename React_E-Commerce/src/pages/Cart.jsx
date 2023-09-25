@@ -1,22 +1,26 @@
 import React, { useEffect, useContext, useState } from "react";
 import { Navbar } from "../components";
-import { useSelector, useDispatch } from "react-redux";
-import { addCart, delCart } from "../redux/action";
 import { Link } from "react-router-dom";
-import { UserContext } from './UserContextProvider';
+import { toast } from "react-toastify";
 import axios from "axios";
 
 const Cart = () => {
-  const state = useSelector((state) => state.handleCart);
   const [cartDetails, setCartDetails] = useState([]);
-  const dispatch = useDispatch();
-  const { user } = useContext(UserContext);
-
-  // Retrieve user email from session storage
   const userEmailFromStorage = sessionStorage.getItem("userEmail");
 
   const EmptyCart = () => {
-    // ...
+    return (
+      <div className="container">
+        <div className="row">
+          <div className="col-md-12 py-5 bg-light text-center">
+            <h4 className="p-3 display-5">Your Cart is Empty</h4>
+            <Link to="/product" className="btn  btn-outline-dark mx-4">
+              <i className="fa fa-arrow-left"></i> Continue Shopping
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   const fetchCartDetails = async () => {
@@ -38,13 +42,11 @@ const Cart = () => {
     if (userEmailFromStorage) {
       fetchCartDetails();
     }
- }, [user]);
+ }, [userEmailFromStorage]);
 
   const addItem = async (product) => {
     console.log(userEmailFromStorage);
     console.log(product);
-    // Dispatch the action to add the product to the Redux store
-    // dispatch(addCart(product));
     console.log("user", userEmailFromStorage, "product", product);
     try {
       const response = await axios.post("http://localhost:3000/addToCart/", {
@@ -54,7 +56,7 @@ const Cart = () => {
       if (!response) {
         throw new Error("Network response was not ok");
       } else {
-        console.log("Item added to the cart");
+        toast.info("Item added to the cart");
       }
     } catch (error) {
       console.error("Error adding item to cart:", error);
@@ -63,7 +65,6 @@ const Cart = () => {
   };
 
   const removeItem = async (product) => {
-    // dispatch(delCart(product));
     try {
       const response = await axios.post("http://localhost:3000/deleteFromCart/", {
         email: userEmailFromStorage,
@@ -72,7 +73,7 @@ const Cart = () => {
       if (!response) {
         throw new Error("Network response was not ok");
       } else {
-        console.log("Item deleted from the cart");
+        toast.info("Item deleted from the cart");
       }
     } catch (error) {
       console.error("Error deleting item from the cart:", error);
