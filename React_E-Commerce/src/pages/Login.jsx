@@ -72,7 +72,7 @@ function Login() {
           </table>
         </form>
         <p>Not registered?&nbsp;
-          <Link to="/register">Login here</Link>
+          <Link to="/register">Register here</Link>
         </p>
       </div>
     </>
