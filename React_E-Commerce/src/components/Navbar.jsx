@@ -6,12 +6,14 @@ const Navbar = () => {
     const userEmailFromStorage = sessionStorage.getItem("userEmail");
     const isLoggedIn = userEmailFromStorage !== null;
 
+    //Initial fetch of cart details
     useEffect(() => {
         if (userEmailFromStorage) {
             fetchCartDetails();
         }
     }, [userEmailFromStorage]);
 
+     // Periodically fetch cart details every minute (2000 milliseconds)
     useEffect(() => {
         const interval = setInterval(() => {
             if (userEmailFromStorage) {
