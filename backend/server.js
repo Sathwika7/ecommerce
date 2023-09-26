@@ -1,11 +1,11 @@
 const express = require('express');
 const mysql = require('mysql');
 const app = express();
-const port = process.env.PORT || 3000; // Set your desired port
+const port = process.env.PORT || 3000; 
 const cors = require('cors');
 app.use(cors());
 app.use(express.json())
-// Create a MySQL database connection
+
 const db = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -13,7 +13,6 @@ const db = mysql.createConnection({
     database: "ecommerce"
 });
 
-// Connect to the database
 db.connect((err) => {
    if (err) {
       console.error('Error connecting to the database:', err);
@@ -26,7 +25,6 @@ db.connect((err) => {
 app.post("/registration", (req, res) => {
    console.log("hello");
    const {email, password,username}= req.body;
-   // Insert user details into the database
    db.query(
      "INSERT INTO userdata (username, password, email) VALUES (?, ?, ?)",
      [username, password, email],
@@ -44,7 +42,6 @@ app.post("/registration", (req, res) => {
  app.post("/logindata", (req, res) => {
   const {email, password} = req.body;
   console.log("server side",email,password);
-  // Check if the username and password match a record in the database
   db.query(
     "SELECT * FROM userdata WHERE email = ? AND password = ?",
     [email, password],
@@ -150,8 +147,7 @@ app.post("/deleteFromCart", (req, res) => {
 });
 
 app.get('/api/productsinfo', (req, res) => {
-    const query = 'SELECT * FROM products'; // Replace with your actual query
-    // Execute the query
+    const query = 'SELECT * FROM products'; 
     db.query(query, (err, results) => {
       if (err) {
         console.error('Error querying the database:', err);
@@ -164,8 +160,7 @@ app.get('/api/productsinfo', (req, res) => {
 
 app.get('/api/products/:id', (req, res) => {
     const productId = req.params.id; // Get the product ID from the URL parameter
-    const query = `SELECT * FROM products WHERE id = ?`; // Replace with your actual table name
-    // Execute the query with the product ID as a parameter
+    const query = `SELECT * FROM products WHERE id = ?`; 
     db.query(query, [productId], (err, results) => {
        if (err) {
           console.error('Error querying the database:', err);
@@ -198,8 +193,6 @@ app.get("/cart", (req, res) => {
       p.id = u.productid
     WHERE
       u.email = ?`;
-
-  // Execute the query
   db.query(query, [email], (err, results) => {
     if (err) {
       console.error("Error querying the database:", err);
