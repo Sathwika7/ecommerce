@@ -26,7 +26,7 @@ const handleSignUp = async() => {
     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
     /*Password should contain minimum 8 characters and should contain one uppercase, one lowercase and one special character*/
     const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[@#$%^&+=!])(?=.*\d).{8,}$/;
-    if(userDetails.username == '' ||   userDetails.email == '' || userDetails.password == '')
+    if(userDetails.username === '' ||   userDetails.email === '' || userDetails.password === '')
     {
       toast.error("Please fill in all the fileds");
     }

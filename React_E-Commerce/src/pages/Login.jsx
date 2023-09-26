@@ -17,7 +17,7 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    if(userDetails.email != '' && userDetails.password != '')
+    if(userDetails.email !== '' && userDetails.password !=='')
     {
       try {
         const response = await axios.post("http://localhost:3000/logindata", userDetails);

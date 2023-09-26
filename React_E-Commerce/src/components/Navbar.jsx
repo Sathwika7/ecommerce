@@ -11,6 +11,17 @@ const Navbar = () => {
             fetchCartDetails();
         }
     }, [userEmailFromStorage]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (userEmailFromStorage) {
+                fetchCartDetails();
+            }
+        }, 2000); // Fetch every minute
+
+        // Cleanup the interval when the component unmounts
+        return () => clearInterval(interval);
+    }, [userEmailFromStorage]);
     
     const handleLogout = () => {
       sessionStorage.removeItem("userEmail");
