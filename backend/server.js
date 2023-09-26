@@ -67,20 +67,6 @@ app.post("/registration", (req, res) => {
   );
 });
 
-// app.post("/addToCart", (req, res) => {
-//   const { email, productid } = req.body;
-//   // Insert the cart item into the database
-//   const quantity = 1;
-//   const sql = "INSERT INTO usercart (email, productid, quantity) VALUES (?, ?, ?)";
-//   db.query(sql, [email, productid, quantity], (err, result) => {
-//     if (err) {
-//       console.error("Error adding item to cart:", err);
-//       res.status(500).json({ error: "Internal Server Error" });
-//     } else {
-//       res.status(200).json({ message: "Item added to cart" });
-//     }
-//   });
-// });
 
 app.post("/addToCart", (req, res) => {
   const { email, productid } = req.body;
@@ -179,7 +165,6 @@ app.get('/api/productsinfo', (req, res) => {
 app.get('/api/products/:id', (req, res) => {
     const productId = req.params.id; // Get the product ID from the URL parameter
     const query = `SELECT * FROM products WHERE id = ?`; // Replace with your actual table name
- 
     // Execute the query with the product ID as a parameter
     db.query(query, [productId], (err, results) => {
        if (err) {
@@ -195,22 +180,6 @@ app.get('/api/products/:id', (req, res) => {
     });
  });
  
-// app.get('/api/products/similar/:category', (req, res) => {
-//     const category = req.params.category; // Get the category from the URL parameter
-//     const query = `SELECT * FROM products WHERE category = ? AND id <> ? LIMIT 4`; // Replace with your actual table name
- 
-//     // Execute the query with the category and exclude the current product (by ID)
-//     db.query(query, [category, productId], (err, results) => {
-//        if (err) {
-//           console.error('Error querying the database:', err);
-//           res.status(500).json({ error: 'Internal Server Error' });
-//        } else {
-//           // Return similar products
-//           res.json(results);
-//        }
-//     });
-// });
-
 app.get("/cart", (req, res) => {
   console.log("Hello cart!");
   const email = req.query.email; // Use req.query to get query parameters
